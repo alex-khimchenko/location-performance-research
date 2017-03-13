@@ -1,0 +1,15 @@
+extends ../layouts/default.jade
+
+block content
+  button.btn.btn-warning.populate-test-circles-10 Populate 10 test circles
+  br
+  button.btn.btn-warning.populate-test-circles-25000 Populate first 25000 test circles
+  br
+  button.btn.btn-warning.populate-test-circles-50000 Populate second 25000 test circles
+  br
+  button.btn.btn-info.populate-near find near by math
+  br
+  button.btn.btn-info.populate-near-db-index find near by db index
+  br
+  button.btn.btn-info.populate-within-db-index find geoWithin by db index
+  .mongo-search-results
