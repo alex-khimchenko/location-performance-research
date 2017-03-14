@@ -67,6 +67,17 @@ var homeController = {
         console.error(err);
         res.status(200).json({err: err});
       });
+  },
+
+  getNearEntireCircle: function (req, res) {
+    return Circle.getNearEntireCircle()
+      .then(function(data) {
+        res.status(200).json(data);
+      })
+      .catch(function(err) {
+        console.error(err);
+        res.status(200).json({err: err});
+      });
   }
 };
 

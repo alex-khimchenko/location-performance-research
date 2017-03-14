@@ -41,6 +41,12 @@ $(function() {
         console.log('populate test circles: ', data);
       });
     });
+
+    $('.populate-near-entire-circle').click(function() {
+      $.post('/getNearEntireCircle', function(data) {
+        console.log('populate test circles: ', data);
+      });
+    });
   }
 );
 

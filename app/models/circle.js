@@ -102,6 +102,38 @@ CircleSchema.methods.getNearlyLocatedMembersDBIndex = function (method) {
   });
 };
 
+CircleSchema.methods.getNearlyMembersEntireCircle = function () {
+  var self = this;
+  var members = self.members;
+  var memberIds = _.map(members, '_id');
+  var queryArr = [];
+  var sphereRadius = 0.032/3963.2;
+
+  _.each(members, function(member) {
+    var idsSlice = _.reject(memberIds, member._id);
+
+    queryArr.push({
+      '_id': { $in: idsSlice },
+      loc: {
+        $geoWithin: {
+          $centerSphere: [ member.loc, sphereRadius ]
+        }
+      }
+    })
+
+  });
+
+  return new Promise(function(resolve, reject) {
+    return self.model('Location').find({$or: queryArr}).then(function(data) {
+      resolve(data);
+    }).catch(function(err) {
+      console.log('error on big query');
+      reject(err)
+    });
+
+  });
+};
+
 CircleSchema.statics.createTestCircle = function (circleIndex) {
   var self = this;
 
@@ -168,7 +200,6 @@ CircleSchema.statics.getNearMath = function () {
   });
 };
 
-
 CircleSchema.statics.getNearDBIndex = function (method) {
   var self = this;
   console.time(method);
@@ -194,6 +225,37 @@ CircleSchema.statics.getNearDBIndex = function (method) {
             });
 
             return resolve({circles: circles.length, total_points: totalPoints})
+          })
+      })
+      .catch(function(error) {
+        console.error(error);
+
+        return reject(error);
+      });
+  })
+};
+
+CircleSchema.statics.getNearEntireCircle = function () {
+  var self = this;
+  console.time('complex query');
+
+  return new Promise(function(resolve, reject) {
+    return self.find({})
+      .populate('members')
+      .then(function(circles) {
+        var promiseArr = [];
+
+        circles.forEach(function(circle) {
+          promiseArr.push(circle.getNearlyMembersEntireCircle());
+        });
+
+        Promise.all(promiseArr)
+          .then(function(data) {
+            console.timeEnd('complex query');
+
+            var uniquePoints = _.uniq(_.flatten(data)).length;
+
+            return resolve({circles: circles.length, total_points: uniquePoints})
           })
       })
       .catch(function(error) {

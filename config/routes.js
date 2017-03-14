@@ -24,6 +24,8 @@ module.exports = function (app, passport) {
 
   app.post('/getGeoWithinDBIndex', home.getGeoWithinDBIndex);
 
+  app.post('/getNearEntireCircle', home.getNearEntireCircle);
+
   /**
    * Error handling
    */
