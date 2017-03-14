@@ -1,17 +1,22 @@
 extends ../layouts/default.jade
 
 block content
-  button.btn.btn-warning.populate-test-circles-10 Populate 10 test circles
-  br
-  button.btn.btn-warning.populate-test-circles-25000 Populate first 25000 test circles
-  br
-  button.btn.btn-warning.populate-test-circles-50000 Populate second 25000 test circles
-  br
-  button.btn.btn-info.populate-near find near by math
-  br
-  button.btn.btn-info.populate-near-db-index find near by db index
-  br
-  button.btn.btn-info.populate-within-db-index find geoWithin by db index
-  br
-  button.btn.btn-info.populate-near-entire-circle find by entire circle complex query
+  .row
+    h3 Populate database with test Locations and Circles data
+    .divider
+    button.btn.btn-warning.populate-test-circles-10 Populate 10 test circles
+    .divider
+    button.btn.btn-warning.populate-test-circles-25000 Populate first 25000 test circles
+    .divider
+    button.btn.btn-warning.populate-test-circles-50000 Populate second 25000 test circles
+  .row
+    h3 Find nearly located members
+    .divider
+    button.btn.btn-info.populate-near Math approach
+    .divider
+    button.btn.btn-info.populate-near-db-index 2dIndex $near approach
+    .divider
+    button.btn.btn-info.populate-within-db-index 2dIndex $geoWithin approach
+    .divider
+    button.btn.btn-info.populate-near-entire-circle Entire circle complex query using $geoWithin
   .mongo-search-results

@@ -15,6 +15,11 @@ body {
   line-height: 40px;
 }
 
+.divider {
+    margin: 10px 0;
+    border-bottom: 1px solid #7dd83e;
+}
+
 /* Custom page footer */
 .footer {
   padding-top: 19px;
