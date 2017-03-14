@@ -83,13 +83,14 @@ CircleSchema.methods.getNearlyLocatedMembersDBIndex = function (method) {
   var memberIds = _.map(members, '_id');
   var promiseArr = [];
 
-  for (var i = 1; i < members.length; i++) {
+  _.each(members, function(member, index) {
 
-    var member = members[i - 1];
-    var slice = _.takeRight(memberIds, members.length - i);
+    if (index < members.length - 1) {
+      var slice = _.pull(memberIds, member._id);
+      promiseArr.push(self.getNearlyLocatedToMember(method, member, slice))
+    }
 
-    promiseArr.push(self.getNearlyLocatedToMember(method, member, slice))
-  }
+  });
 
   return new Promise(function(resolve, reject) {
     Promise.all(promiseArr)
