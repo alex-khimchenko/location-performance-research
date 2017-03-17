@@ -35,8 +35,27 @@ var CircleSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Location'
     }
-  ]
+  ],
+  points: {type: Number, default: 0}
 });
+
+CircleSchema.statics.getRandomLocation = function() {
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    return self.count().then(function(count) {
+      var rand = Math.floor(Math.random() * count);
+
+      self.findOne().skip(rand).then(function(data) {
+        resolve(data.members[Math.floor(Math.random()*10)])
+      });
+    }).catch(function(err) {
+      console.error('find random circle error: ', err);
+
+      return reject(err)
+    });
+  });
+};
 
 CircleSchema.methods.getNearlyLocatedToMember = function (method, member, ids) {
   var self = this;
@@ -267,5 +286,43 @@ CircleSchema.statics.getNearEntireCircle = function () {
   })
 };
 
+CircleSchema.statics.getMemberCircles = function (uid) {
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    return self.find({
+      members: uid
+    }).then(function(data) {
+      //console.log('data: ', data);
+      resolve(data);
+    }).catch(function(err) {
+      console.log('err: ', err);
+      reject(err);
+    });
+  });
+};
+
+CircleSchema.methods.getNearlyMembersForLocation = function (uid, loc) {
+  var self = this;
+  var idsSlice = _.reject(self.members, mongoose.Types.ObjectId(uid));
+
+  var sphereRadius = 0.032/3963.2;
+
+  return new Promise(function(resolve, reject) {
+    return self.model('Location').find({
+      '_id': { $in: idsSlice },
+      loc: {
+        $geoWithin: {
+          $centerSphere: [ loc, sphereRadius ]
+        }
+      }
+    }).then(function(data) {
+      resolve(data);
+    }).catch(function(err) {
+      console.log('err: ', err);
+      reject(err);
+    });
+  });
+};
 
 mongoose.model('Circle', CircleSchema);

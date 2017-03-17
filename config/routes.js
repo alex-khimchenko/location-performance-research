@@ -26,6 +26,14 @@ module.exports = function (app, passport) {
 
   app.post('/getNearEntireCircle', home.getNearEntireCircle);
 
+  app.post('/emulateLocationChange', home.emulateLocationChange);
+
+  app.post('/changeLocation', home.changeLocation);
+
+  app.post('/sendPing', home.sendPing);
+
+  app.post('/ping', home.ping);
+
   /**
    * Error handling
    */
