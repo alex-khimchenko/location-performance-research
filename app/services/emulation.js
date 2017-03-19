@@ -57,7 +57,7 @@ var emulator = {
         return rp(options)
           .then(function(data) {
             console.timeEnd('locationChange');
-            console.log(data)
+            //console.log(data)
           }).catch(function(err) {
             console.error('error while request promise: ', err);
           });

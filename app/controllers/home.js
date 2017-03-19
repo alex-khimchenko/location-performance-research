@@ -101,7 +101,7 @@ var homeController = {
     var locationsToIncrementMultiplier = [];
     var locChangedTime = Number(new Date());
 
-    console.log(req.body, typeof req.body);
+    //console.log(req.body, typeof req.body);
     Location.findById(uid).then(function(locData) {
       return Circle.getMemberCircles(uid)
       .then(function(circles) {
@@ -147,7 +147,7 @@ var homeController = {
             Location.decrementMultiplier(previousNearlyLocated, uid, locChangedTime)
           ]).then(function(data) {
             console.timeEnd('updateLocation');
-            console.log('final: ', data)
+            //console.log('final: ', data)
           });
         });
       });

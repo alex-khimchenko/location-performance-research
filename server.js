@@ -1,11 +1,5 @@
 'use strict';
 
-/*
- * nodejs-express-mongoose
- * Copyright(c) 2015 Madhusudhan Srinivasa <madhums8@gmail.com>
- * MIT Licensed
- */
-
 /**
  * Module dependencies
  */
@@ -49,7 +43,7 @@ connection
   .once('open', listen);
 
 function listen () {
-  if (app.get('env') === 'test') return;
+  if (app.get('env') === 'test' || app.get('env') === 'service') return;
   app.listen(port);
   console.log('Express app started on port ' + port);
 }
