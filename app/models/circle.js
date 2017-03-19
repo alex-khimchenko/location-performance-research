@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var _ = require('lodash');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const _ = require('lodash');
 
 function getNearlyLocatedMembersMath (circle) {
 
@@ -185,6 +185,53 @@ CircleSchema.statics.createTestCircle = function (circleIndex) {
             members: memberIds
           }
         );
+      }).then(function(createLocData) {
+        return resolve('ok');
+      })
+      .catch(function(error) {
+        return reject(error);
+      });
+  });
+};
+
+CircleSchema.statics.createTestCircleWithExistingLocations = function (circleIndex) {
+  var self = this;
+
+  return new Promise(function (resolve, reject) {
+    var locationArr = [];
+    var austinCoords = [97.7431, 30.2672]; //location sample
+
+    //approximate 1000 feet interval
+    var long1000Feet = 0.00347;
+    var lat1000Feet = 0.00275;
+
+    for(var i = 1; i<=7; i++) {
+      locationArr.push({
+        name: 'location' + i + 'from' + circleIndex,
+        loc: [(austinCoords[0] + Math.random()*long1000Feet).toFixed(6), (austinCoords[1] + Math.random()*lat1000Feet).toFixed(6)]
+      })
+    }
+
+    return self.model('Location').getNRandomLocations(3).then(function(existingLocations) {
+      return self.model('Location').insertMany(locationArr)
+        .then(function(locationsData) {
+
+          var memberIds = _.map(locationsData, function(d) {
+            return mongoose.Types.ObjectId(d._id)
+          });
+
+          _.each(existingLocations, function(id) {
+            memberIds.push(mongoose.Types.ObjectId(id))
+          });
+
+          return self.create(
+            {
+              name: 'loc' + circleIndex,
+              members: memberIds
+            }
+          );
+        });
+
       }).then(function(createLocData) {
         return resolve('ok');
       })

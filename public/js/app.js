@@ -25,6 +25,13 @@ $(function() {
       });
     });
 
+    // clear all locations and circles
+    $('.clear-db').click(function() {
+      $.post('/clear', function(data) {
+        console.log('clear data: ', data);
+      });
+    });
+
     // find nearly located members
     $('.populate-near').click(function() {
       $.post('/getNearMath', function(data) {

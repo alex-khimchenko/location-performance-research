@@ -39,7 +39,7 @@ var emulator = {
       (austinCoords[1] + Math.random()*lat1000Feet).toFixed(6)
     ];
 
-    return Circle.getRandomLocation()
+    return Location.getRandomLocation()
       .then(function(id) {
 
         console.log('randCircle location id: ', id);

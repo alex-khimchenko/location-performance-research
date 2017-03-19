@@ -18,6 +18,8 @@ module.exports = function (app, passport) {
 
   app.post('/populateTestCircles', home.populateTestCircles);
 
+  app.post('/clear', home.clearDB);
+
   app.post('/getNearMath', home.getNearMath);
 
   app.post('/getNearDBIndex', home.getNearDBIndex);

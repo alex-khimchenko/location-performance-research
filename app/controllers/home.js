@@ -11,7 +11,17 @@ var homeController = {
 
   index: function (req, res) {
     res.render('home/index', {
-      title: 'Node Express Mongoose Boilerplate'
+      title: 'bthere-test'
+    });
+  },
+
+  clearDB: function (req, res) {
+    return Circle.remove({}).then(function(removeCircleData) {
+      return Location.remove({}).then(function(removeLocationData) {
+        res.status(200).json({data: [removeCircleData, removeLocationData]})
+      })
+    }).catch(function(err) {
+      res.status(200).json({err: err});
     });
   },
 
@@ -26,17 +36,22 @@ var homeController = {
     var start = req.body.from;
     var populateFunctions = [];
 
-    for(var i = 1; i <= creationAmount; i++) {
-      populateFunctions.push((Circle.createTestCircle(i + +start)))
-    }
+    Circle.createTestCircle(1).then(function() {
 
-    Promise.all(populateFunctions)
-      .then(function () {
-        res.status(200).json({status: 'ok'});
-      })
-      .catch(function(error) {
-        res.status(200).json({err: error});
-      });
+      for(var i = 2; i <= creationAmount; i++) {
+        populateFunctions.push((Circle.createTestCircleWithExistingLocations(i + +start)))
+      }
+
+      Promise.all(populateFunctions)
+        .then(function () {
+          res.status(200).json({status: 'ok'});
+        })
+        .catch(function(error) {
+          console.error(error);
+          res.status(200).json({err: error});
+        });
+    });
+
   },
 
   getNearMath: function (req, res) {
@@ -103,8 +118,7 @@ var homeController = {
 
     //console.log(req.body, typeof req.body);
     Location.findById(uid).then(function(locData) {
-      return Circle.getMemberCircles(uid)
-      .then(function(circles) {
+      return Circle.getMemberCircles(uid).then(function(circles) {
         _.each(circles, function(circle) {
           promiseArr.push(circle.getNearlyMembersForLocation(uid, newLocation))
         });
