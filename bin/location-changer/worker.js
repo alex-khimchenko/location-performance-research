@@ -7,7 +7,7 @@ const appPath = dir + 'app/';
 
 const emulator = require(appPath + 'services/emulation');
 
-var numberOfLocationChangePerSecond = 1;
+var numberOfLocationChangePerSecond = 10;
 
 setInterval(emulator.emulateLocationChange, 1000/numberOfLocationChangePerSecond);
 

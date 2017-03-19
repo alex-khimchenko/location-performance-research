@@ -36,6 +36,8 @@ module.exports = function (app, passport) {
 
   app.post('/ping', home.ping);
 
+  app.post('/visualize', home.visualize);
+
   /**
    * Error handling
    */

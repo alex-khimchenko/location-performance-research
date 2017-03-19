@@ -7,6 +7,11 @@ const _ = require('lodash');
 
 var emulator = require('../services/emulation');
 
+function getRandomColor(){
+  var color =  "#" + (Math.random() * 0xFFFFFF << 0).toString(16);
+  return color;
+}
+
 var homeController = {
 
   index: function (req, res) {
@@ -179,6 +184,33 @@ var homeController = {
   sendPing: function (req, res) {
     emulator.sendTest();
     res.status(200).send('ok')
+  },
+
+  visualize: function (req, res) {
+
+    var austinCoords = [97.7431, 30.2672];
+    var long1000Feet = 0.00347;
+    var lat1000Feet = 0.00275;
+
+    Circle.find({}).populate('members').then(function(circleData) {
+      _.each(circleData, function(data) {
+
+        var members = data.members;
+
+        var color = getRandomColor();
+
+        _.map(members, function(d) {
+
+          var newLon = (d.loc[0] - austinCoords[0]) / long1000Feet * 500;
+          var newLat = (d.loc[1] - austinCoords[1]) / lat1000Feet * 500;
+
+          d.loc = [newLon, newLat];
+          d.name = color;
+        });
+      });
+
+      res.status(200).send({points: _.flatten(_.map(circleData, 'members'))})
+    });
   }
 };
 
