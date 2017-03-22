@@ -83,8 +83,8 @@ $(function() {
       $(".svg-content").html('');
       console.log('count: ', pos_data.length);
 
-      var width = 540;
-      var height = 540;
+      var width = 580;
+      var height = 580;
 
       var svg = d3.select( ".svg-content" )
         .append( "svg" )
@@ -98,15 +98,19 @@ $(function() {
         .append("g")
         .attr("class", "node-group")
         .attr("transform", function(d) {
-          return "translate(" + (d.loc[0] + 20) + "," + (d.loc[1] + 20) + ")"
+          return "translate(" + (d.loc[0] + 40) + "," + (d.loc[1] + 40) + ")"
         });
 
+      var arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(40)
+        .startAngle(function(d) {return d.startAngle;})
+        .endAngle(function(d) {return d.endAngle;});
 
-      var circle = elemEnter.append("circle")
-        .attr("r", 20 )
-        .attr("stroke","orange")
-        .attr("opacity", "0.4")
-        .attr("fill", function(d) {return d.name});
+      elemEnter.append("path")
+        .attr("d", arc)
+        .attr('opacity', '0.5')
+        .attr('fill', function(d) {return d.color});
 
       var circle = elemEnter.append("circle")
         .attr("r", 3 )
@@ -115,7 +119,7 @@ $(function() {
       elemEnter.append("text")
         .attr("text-anchor", "middle")
         .attr("font-size", "10px")
-        .text(function(d, i) { return i + 1; });
+        .text(function(d) { return d.name; });
 
 
     }

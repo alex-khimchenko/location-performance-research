@@ -363,7 +363,14 @@ CircleSchema.methods.getNearlyMembersForLocation = function (uid, loc) {
           $centerSphere: [ loc, sphereRadius ]
         }
       }
-    }).then(function(data) {
+    }).lean().then(function(data) {
+
+      _.each(data, function(d) {
+        var nearUsers = _.map(d.nearlyLocatedUsers, (u=> u.toString()));
+        var found = idsSlice.some(id=> nearUsers.indexOf(id.toString()) >= 0);
+        d.notToIncrement = found;
+      });
+
       resolve(data);
     }).catch(function(err) {
       console.log('err: ', err);
